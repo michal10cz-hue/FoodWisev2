@@ -1,0 +1,11 @@
+# FoodWise
+
+# Common
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vs/
+.idea/
+*.swp
