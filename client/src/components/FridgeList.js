@@ -7,72 +7,42 @@ function FridgeList({ onEdit }) {
 
   return (
     <div className="fridge-list">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h3 style={{ color: '#166534', margin: 0 }}>Twoja Lodówka</h3>
-        <span style={{ fontSize: '0.85rem', color: '#64748b', background: '#f1f5f9', padding: '4px 12px', borderRadius: '20px', fontWeight: '600' }}>
-          {fridgeItems.length} produktów
-        </span>
+      <div className="fridge-list-header">
+        <h3>Twoja Lodówka</h3>
+        <span className="fridge-count-badge">{fridgeItems.length} produktów</span>
       </div>
 
       {fridgeItems.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', background: '#f8fafc', borderRadius: '12px', border: '2px dashed #e2e8f0' }}>
-          <p>Twoja lodówka jest pusta. Dodaj produkty, aby system FoodWise mógł zaproponować przepisy![cite: 1]</p>
+        <div className="empty-fridge-state">
+          <p>Twoja lodówka jest pusta. Dodaj produkty, aby system FoodWise mógł zaproponować przepisy.</p>
         </div>
       ) : (
         <div className="items-grid">
-          {fridgeItems.map(item => {
-            return (
-              <div key={item.id} className="item-card" style={{ backgroundColor: '#ffffff' }}> 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                  <span className="item-name" style={{ color: '#1e293b', fontWeight: '700' }}>{item.name}</span>
-                  {/* Neutralna etykieta kategorii */}
-                  <span style={{ 
-                    fontSize: '10px', 
-                    fontWeight: '800', 
-                    color: '#64748b',
-                    backgroundColor: '#f1f5f9',
-                    padding: '3px 8px',
-                    borderRadius: '6px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    {item.category || 'Inne'}
-                  </span>
-                </div>
-                
-                <div style={{ color: '#64748b', fontSize: '14px', marginBottom: '0px' }}>
-                  Ilość: <strong>{item.quantity} {item.unit}</strong>
-                </div>
-
-                <div style={{ fontSize: '14px', marginTop: '5px', marginBottom: '5px' }}>
-                  <span style={{ color: '#64748b' }}>Ważne do: </span>
-                  <span style={{ 
-                    fontWeight: '600', 
-                    color: new Date(item.expiryDate) < new Date() ? '#ef4444' : '#1e293b' 
-                  }}>
-                    {item.expiryDate || 'Brak daty'}
-                  </span>
-                </div>
-
-                <div className="actions" style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                  <button 
-                    className="btn-edit" 
-                    onClick={() => onEdit(item)}
-                    style={{ flex: 1, padding: '8px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
-                  >
-                    Edytuj
-                  </button>
-                  <button 
-                    className="btn-delete" 
-                    onClick={() => removeItem(item.id)}
-                    style={{ flex: 1, padding: '8px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
-                  >
-                    Usuń
-                  </button>
-                </div>
+          {fridgeItems.map(item => (
+            <div key={item.id} className="item-card">
+              <div className="item-top-row">
+                <span className="item-name">{item.name}</span>
+                <span className="item-category-badge">{item.category || 'Inne'}</span>
               </div>
-            );
-          })}
+
+              <div className="item-detail">
+                <span className="item-label">Ilość</span>
+                <strong>{item.quantity} {item.unit}</strong>
+              </div>
+
+              <div className="item-detail">
+                <span className="item-label">Ważne do</span>
+                <strong className={new Date(item.expiryDate) < new Date() ? 'expired' : ''}>
+                  {item.expiryDate || 'Brak daty'}
+                </strong>
+              </div>
+
+              <div className="item-actions">
+                <button className="btn-edit" onClick={() => onEdit(item)}>Edytuj</button>
+                <button className="btn-delete" onClick={() => removeItem(item.id)}>Usuń</button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

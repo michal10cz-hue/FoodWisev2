@@ -2,9 +2,10 @@ import React, { useState, useContext, useEffect } from 'react';
 import { FridgeContext } from '../context/FridgeContext';
 import './FridgeManager.css';
 
-function ProductForm({ editingProduct, setEditingProduct }) {
+const initialState = { name: '', quantity: '', unit: 'szt.', category: 'Inne', expiryDate: '', barcode: '' };
+
+function ProductForm({ editingProduct, setEditingProduct, presetProduct }) {
   const { addItem, updateItem } = useContext(FridgeContext);
-  const initialState = { name: '', quantity: '', unit: 'szt.', category: 'Inne', expiryDate: '' };
   const [product, setProduct] = useState(initialState);
   const [errors, setErrors] = useState({});
   const categories = ['Nabiał', 'Warzywa', 'Owoce', 'Mięso', 'Pieczywo', 'Płatki', 'Napoje', 'Inne'];
@@ -14,41 +15,43 @@ function ProductForm({ editingProduct, setEditingProduct }) {
     if (editingProduct) {
       setProduct(editingProduct);
       setErrors({});
+    } else if (presetProduct) {
+      setProduct({ ...initialState, ...presetProduct });
+      setErrors({});
+    } else {
+      setProduct(initialState);
     }
-  }, [editingProduct]);
+  }, [editingProduct, presetProduct]);
 
   const validate = (name, value) => {
-    let error = "";
-    
-    if (name === "name") {
+    let error = '';
+
+    if (name === 'name') {
       const specialCharsRegex = /^[a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]*$/;
-      
       if (value.trim().length > 0 && value.trim().length < 3) {
-        error = "Nazwa musi mieć min. 3 znaki";
+        error = 'Nazwa musi mieć min. 3 znaki';
       } else if (!specialCharsRegex.test(value)) {
-        error = "Znaki specjalne są niedozwolone";
+        error = 'Znaki specjalne są niedozwolone';
       }
     }
 
-    if (name === "quantity") {
+    if (name === 'quantity') {
       if (parseFloat(value) <= 0 || isNaN(value)) {
-        error = "Ilość musi być większa od 0";
+        error = 'Ilość musi być większa od 0';
       }
     }
-    
+
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    setProduct(prev => ({ ...prev, [name]: value }));
     validate(name, value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Finalna walidacja przed wysłaniem
     const specialCharsRegex = /^[a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]*$/;
     const isNameValid = product.name.trim().length >= 3 && specialCharsRegex.test(product.name);
     const isQuantityValid = parseFloat(product.quantity) > 0;
@@ -70,9 +73,9 @@ function ProductForm({ editingProduct, setEditingProduct }) {
       <h3>{editingProduct ? 'Edytuj produkt' : 'Dodaj produkt'}</h3>
       <form onSubmit={handleSubmit} className="form-group">
         <div className="input-field-container">
-          <input 
+          <input
             name="name"
-            type="text" 
+            type="text"
             placeholder="Nazwa (np. Pomidor)"
             value={product.name}
             onChange={handleChange}
@@ -82,11 +85,7 @@ function ProductForm({ editingProduct, setEditingProduct }) {
         </div>
 
         <div className="input-field-container">
-          <select 
-            name="category" 
-            value={product.category} 
-            onChange={handleChange}
-          > 
+          <select name="category" value={product.category} onChange={handleChange}>
             {categories.map(cat => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
@@ -94,10 +93,10 @@ function ProductForm({ editingProduct, setEditingProduct }) {
         </div>
 
         <div className="input-row">
-          <div className="input-field-container" style={{ flex: 2 }}>
-            <input 
+          <div className="input-field-container flex-2">
+            <input
               name="quantity"
-              type="number" 
+              type="number"
               placeholder="Ilość"
               value={product.quantity}
               onChange={handleChange}
@@ -106,21 +105,20 @@ function ProductForm({ editingProduct, setEditingProduct }) {
             {errors.quantity && <span className="error-text">{errors.quantity}</span>}
           </div>
 
-          <div className="input-field-container" style={{ flex: 1 }}>
+          <div className="input-field-container flex-1">
             <select name="unit" value={product.unit} onChange={handleChange}>
               {units.map(unit => (
-              <option key={unit} value={unit}>{unit}</option>
+                <option key={unit} value={unit}>{unit}</option>
               ))}
             </select>
           </div>
         </div>
 
+
         <div className="input-field-container">
-          <label style={{ fontSize: '12px', color: '#64748b', marginBottom: '5px', fontWeight: '600' }}>
-            Data ważności:
-          </label>
-          <input 
-            type="date" 
+          <label className="input-label">Data ważności:</label>
+          <input
+            type="date"
             name="expiryDate"
             value={product.expiryDate}
             onChange={handleChange}
@@ -129,19 +127,16 @@ function ProductForm({ editingProduct, setEditingProduct }) {
           {errors.expiryDate && <span className="error-text">{errors.expiryDate}</span>}
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="btn-add"
-          disabled={Object.values(errors).some(e => e !== "") || !product.name || !product.quantity}
+          disabled={Object.values(errors).some(e => e !== '') || !product.name || !product.quantity}
         >
           {editingProduct ? 'Zapisz zmiany' : 'Dodaj do lodówki'}
         </button>
+
         {editingProduct && (
-          <button 
-            type="button" 
-            onClick={() => { setEditingProduct(null); setProduct(initialState); }}
-            style={{ marginTop: '10px', background: 'none', color: '#64748b', cursor: 'pointer', border: 'none' }}
-          >
+          <button type="button" className="btn-cancel" onClick={() => { setEditingProduct(null); setProduct(initialState); }}>
             Anuluj edycję
           </button>
         )}
