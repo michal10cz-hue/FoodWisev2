@@ -1,0 +1,12 @@
+**/.git
+**/.vs
+**/.idea
+**/.vscode
+**/bin
+**/obj
+**/*.user
+**/*.suo
+**/node_modules
+Dockerfile
+.dockerignore
+**/appsettings.Development.json

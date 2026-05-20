@@ -9,3 +9,14 @@ Thumbs.db
 .vs/
 .idea/
 *.swp
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Docker / build artifacts
+**/bin/
+**/obj/
+**/node_modules/
+**/build/
