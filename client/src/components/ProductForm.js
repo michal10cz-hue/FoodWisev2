@@ -24,25 +24,32 @@ function ProductForm({ editingProduct, setEditingProduct, presetProduct }) {
   }, [editingProduct, presetProduct]);
 
   const validate = (name, value) => {
-    let error = '';
+  let error = '';
 
-    if (name === 'name') {
-      const specialCharsRegex = /^[a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]*$/;
-      if (value.trim().length > 0 && value.trim().length < 3) {
-        error = 'Nazwa musi mieć min. 3 znaki';
-      } else if (!specialCharsRegex.test(value)) {
-        error = 'Znaki specjalne są niedozwolone';
-      }
+  if (name === 'name') {
+    const specialCharsRegex = /^[a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]*$/;
+    if (value.trim().length > 0 && value.trim().length < 3) {
+      error = 'Nazwa musi mieć min. 3 znaki';
+    } else if (!specialCharsRegex.test(value)) {
+      error = 'Znaki specjalne są niedozwolone';
     }
+  }
 
-    if (name === 'quantity') {
-      if (parseFloat(value) <= 0 || isNaN(value)) {
-        error = 'Ilość musi być większa od 0';
-      }
+  if (name === 'quantity') {
+    if (parseFloat(value) <= 0 || isNaN(value)) {
+      error = 'Ilość musi być większa od 0';
     }
+  }
 
-    setErrors(prev => ({ ...prev, [name]: error }));
-  };
+  // DODAJ TEN BLOK:
+  if (name === 'expiryDate') {
+    if (value && new Date(value) < new Date()) {
+      error = 'Data ważności nie może być w przeszłości';
+    }
+  }
+
+  setErrors(prev => ({ ...prev, [name]: error }));
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
