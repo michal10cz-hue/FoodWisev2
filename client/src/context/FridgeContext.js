@@ -3,80 +3,18 @@ import React, { createContext, useState, useRef } from 'react';
 const FridgeContext = createContext();
 
 const initialFridgeItems = [
-  {
-    id: 1,
-    name: 'Jajka',
-    quantity: 10,
-    unit: 'szt.',
-    category: 'nabia\u0142',
-    expiryDate: '2024-07-01',
-    dateAdded: '2026-05-12T08:30:00.000Z',
-  },
-  {
-    id: 2,
-    name: 'Mleko',
-    quantity: 1,
-    unit: 'l',
-    category: 'nabia\u0142',
-    expiryDate: '2024-07-01',
-    dateAdded: '2026-05-13T09:15:00.000Z',
-  },
-  {
-    id: 3,
-    name: 'Chleb',
-    quantity: 1,
-    unit: 'szt.',
-    category: 'pieczywo',
-    expiryDate: '2024-07-01',
-    dateAdded: '2026-05-14T07:45:00.000Z',
-  },
-  {
-    id: 4,
-    name: 'Mas\u0142o',
-    quantity: 200,
-    unit: 'g',
-    category: 'nabia\u0142',
-    expiryDate: '2024-07-01',
-    dateAdded: '2026-05-15T11:20:00.000Z',
-  },
-  {
-    id: 5,
-    name: 'Ser',
-    quantity: 300,
-    unit: 'g',
-    category: 'nabia\u0142',
-    expiryDate: '2024-07-01',
-    dateAdded: '2026-05-16T13:05:00.000Z',
-  },
-  {
-    id: 6,
-    name: 'Szczypiorek',
-    quantity: 1,
-    unit: 'p\u0119czek',
-    category: 'warzywa',
-    expiryDate: '2024-07-01',
-    dateAdded: '2026-05-17T16:40:00.000Z',
-  },
+  { id: 1, name: 'Jajka', quantity: 10, unit: 'szt.', category: 'nabiał', expiryDate: '2026-05-25', dateAdded: '2026-05-12T08:30:00.000Z' },
+  { id: 2, name: 'Mleko', quantity: 1, unit: 'l', category: 'nabiał', expiryDate: '2026-05-21', dateAdded: '2026-05-13T09:15:00.000Z' },
+  { id: 3, name: 'Chleb', quantity: 1, unit: 'szt.', category: 'pieczywo', expiryDate: '2026-05-19', dateAdded: '2026-05-14T07:45:00.000Z' },
+  { id: 4, name: 'Masło', quantity: 200, unit: 'g', category: 'nabiał', expiryDate: '2026-06-01', dateAdded: '2026-05-15T11:20:00.000Z' },
+  { id: 5, name: 'Ser', quantity: 300, unit: 'g', category: 'nabiał', expiryDate: '2026-05-23', dateAdded: '2026-05-16T13:05:00.000Z' },
+  { id: 6, name: 'Szczypiorek', quantity: 1, unit: 'pęczek', category: 'warzywa', expiryDate: '', dateAdded: '2026-05-17T16:40:00.000Z' },
 ];
 
 export function FridgeProvider({ children }) {
-<<<<<<< HEAD
-  const [fridgeItems, setFridgeItems] = useState([
-    { id: 1, name: 'Jajka', quantity: 10, unit: 'szt.', category: 'nabiał', expiryDate: '2026-05-25' },
-    { id: 2, name: 'Mleko', quantity: 1, unit: 'l', category: 'nabiał', expiryDate: '2026-05-21' },
-    { id: 3, name: 'Chleb', quantity: 1, unit: 'szt.', category: 'pieczywo', expiryDate: '2026-05-19' },
-    { id: 4, name: 'Masło', quantity: 200, unit: 'g', category: 'nabiał', expiryDate: '2026-06-01' },
-    { id: 5, name: 'Ser', quantity: 300, unit: 'g', category: 'nabiał', expiryDate: '2026-05-23' },
-    { id: 6, name: 'Szczypiorek', quantity: 1, unit: 'pęczek', category: 'warzywa', expiryDate: '' },
-  ]);
-=======
   const [fridgeItems, setFridgeItems] = useState(initialFridgeItems);
->>>>>>> upstream/main
-
-  // Zmienna do przechowywania ostatniego powiadomienia
   const lastNotificationRef = useRef('');
 
-  // Funkcja do poprawnej odmiany polskiej
   const getPolishMessage = (count, type) => {
     if (type === 'expired') {
       if (count === 0) return '';
@@ -92,7 +30,6 @@ export function FridgeProvider({ children }) {
     return '';
   };
 
-  // Funkcja sprawdzająca daty i zwracająca komunikaty
   const getExpiryNotification = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -120,12 +57,10 @@ export function FridgeProvider({ children }) {
     return null;
   };
 
-  // Funkcja do ręcznego wywołania powiadomienia (używana przy przejściu do Lodówki)
   const showNotificationIfNeeded = () => {
     const notification = getExpiryNotification();
     const notificationKey = notification || 'none';
     
-    // Sprawdź czy to nowe powiadomienie (inne niż poprzednie)
     if (notification && lastNotificationRef.current !== notificationKey) {
       alert(notification);
       lastNotificationRef.current = notificationKey;
