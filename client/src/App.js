@@ -62,8 +62,9 @@ function AppContent() {
   if (!isReady) {
     return null;
   }
+  return <AuthenticatedApp />;
 
-  return isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
+  //return isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }
 
 function App() {
